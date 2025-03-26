@@ -279,6 +279,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 @app.route('/grafana-command', methods=['POST'])
+# Have Grafana send JSON payload to http://python:5000/grafana-command
 
 def grafana_command():
     # message = request.get_json()
