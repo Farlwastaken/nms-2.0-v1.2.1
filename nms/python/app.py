@@ -81,9 +81,18 @@ def on_message(client, userdata, msg):
         flattened_message = flatten_dict(message)
         flattened_response = {}
         flattened_data = {}
+        
+        # Flatten 'response' if it exists
         if 'response' in message:
-            flattened_response = flatten_dict(message['response'], 'response')
+            if isinstance(message['response'], list):
+                # Flatten each item in the list with an index
+                for i, item in enumerate(message['response'], start=1):
+                    flattened_response.update(flatten_dict(item, f'response_{i}'))
+            else:
+                flattened_response = flatten_dict(message['response'], 'response')
             flattened_message.update(flattened_response)
+        
+        # Flatten 'data' if it exists
         if 'data' in message:
             flattened_data = flatten_dict(message['data'], 'data')
             flattened_message.update(flattened_data)
@@ -112,8 +121,8 @@ COMMAND_TEMPLATE = {
     "data": None # Add dynamically
 }
 PRESET_COMMANDS = {
-    "1": {
-        "name": "Fan On",
+    "fan_on": {
+        # "name": "Fan On",
         "data": {
             "service": "slot7",
             "method": "fanConfig.set",
@@ -125,8 +134,8 @@ PRESET_COMMANDS = {
             }
         }
     },
-    "2": {
-        "name": "Fan Off",
+    "fan_off": {
+        # "name": "Fan Off",
         "data": {
             "service": "slot7",
             "method": "fanConfig.set",
@@ -138,36 +147,53 @@ PRESET_COMMANDS = {
             }
         }
     },
-    "3": {
-        "name": "Fan Configuration",
+    "fan_config": {
+        # "name": "Fan Configuration", # The current settings of the fan - set speed may not reflect actual speed
         "data": {
             "service": "slot7",
             "method": "fanConfig.get",
             "parms": {}
         }
     },
-    "4": {
-        "name": "Fan Real-time Speed",
+    "slot7_state": {
+        # "name": "Fan Real-time Speed",
         "data": {
             "service": "slot7", 
             "method": "state",
             "parms": {}
         }
     },
-    "5": {
-        "name": "GPS Config",
+    "system_state": {
+        # "name": "System State",
+        "data": {
+        "service": "system",
+        "method": "state",
+        "parms": {}
+        }
+    },
+    "gps_config": {
+        # "name": "GPS Config",
         "data": {
             "service": "netdmate",
             "method": "mobile.gpsGet",
             "parms": {"name": "ltel"}
         }
     },
-    "6": {
-        "name": "Reboot Device",
+    "reboot": {
+        # "name": "Reboot Device",
         "data": {
             "service": "system",
             "method": "reboot",
             "parms": {}
+        }
+    },
+    "flow_monitor": {
+        # "name": "Switch Port Traffic Statistics",
+        "data": {
+            "service": "switch.port", 
+            "method": "statistics", 
+            "parms": { 
+            } 
         }
     }
 }
@@ -218,28 +244,73 @@ def publish_connect_reply(client):
             print("Failed to send connect reply message 5 times! Disconnecting...\n")
             break
 
-def publish_command(client):
+def publish_command_loop(client):
     global EXIT_COMMAND_LOOP
     while not FLAG_EXIT:
+        '''
         command = COMMAND_TEMPLATE.copy()
         command["session"] = SESSION_ID
         command["time"] = int(time.time())
-        command["data"] = PRESET_COMMANDS["4"]["data"].copy()
-        msg = json.dumps(command)
+
+        command["data"] = PRESET_COMMANDS["slot7_state"]["data"].copy()
+        dashboard_1 = json.dumps(command)
+        command["data"] = PRESET_COMMANDS["system_state"]["data"].copy()
+        dashboard_2 = json.dumps(command)
+        command["data"] = PRESET_COMMANDS["flow_monitor"]["data"].copy()
+        dashboard_3 = json.dumps(command)
 
         if not client.is_connected():
             logging.error("publish: MQTT client is not connected!")
             time.sleep(2)
             continue
 
-        result = client.publish(COMMAND_TOPIC, msg, qos=1)
+        result = client.publish(COMMAND_TOPIC, dashboard_1, qos=1)
         # result: [0, 1]
         status = result[0]
         if status == 0:
-            print(f'\nSending command to device...\n')
+            print(f'\nSending slot7_state command to device...\n')
         else:
-            print(f'\nFailed to send message to device! Please try again!\n')
+            print(f'\nFailed to send slot7_state command to device!\n')
         
+        result = client.publish(COMMAND_TOPIC, dashboard_2, qos=1)
+        # result: [0, 1]
+        status = result[0]
+        if status == 0:
+            print(f'\nSending system_state command to device...\n')
+        else:
+            print(f'\nFailed to send system_state command to device!\n')
+
+        result = client.publish(COMMAND_TOPIC, dashboard_3, qos=1)
+        # result: [0, 1]
+        status = result[0]
+        if status == 0:
+            print(f'\nSending system_state command to device...\n')
+        else:
+            print(f'\nFailed to send system_state command to device!\n')
+        '''
+
+        for dashboard_section in ["slot7_state", "system_state", "flow_monitor"]:
+            command = COMMAND_TEMPLATE.copy()
+            command["session"] = SESSION_ID
+            command["time"] = int(time.time())
+            
+            command["data"] = PRESET_COMMANDS[dashboard_section]["data"].copy()
+            section = json.dumps(command)
+            
+            if not client.is_connected():
+                logging.error("publish: MQTT client is not connected!")
+                time.sleep(2)
+                continue
+
+            result = client.publish(COMMAND_TOPIC, section, qos=1)
+            # result: [0, 1]
+            status = result[0]
+            if status == 0:
+                print(f'\nSending {dashboard_section} to device...\n')
+            else:
+                print(f'\nFailed to send {dashboard_section} to device!\n')
+
+
         time.sleep(4)
 
 ### INFLUXDB WRITE ###
@@ -260,48 +331,52 @@ write_api = database.write_api(write_options=SYNCHRONOUS)
 # flatten_dict() function to flatten nested dictionaries for InfluxDB
 def flatten_dict(d, parent_key='', sep='_'):
     items = []
-    for k, v in d.items():
-        new_key = f"{parent_key}{sep}{k}" if parent_key else k
-        if isinstance(v, dict):
-            items.extend(flatten_dict(v, new_key, sep=sep).items())
-        elif isinstance(v, list):
-            for i, item in enumerate(v):
-                if isinstance(item, dict):
-                    items.extend(flatten_dict(item, f"{new_key}{sep}{i}", sep=sep).items())
-                else:
-                    items.append((f"{new_key}{sep}{i}", item))
-        else:
-            items.append((new_key, v))
+    if isinstance(d, dict):  # Ensure the input is a dictionary
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(flatten_dict(v, new_key, sep=sep).items())
+            elif isinstance(v, list):
+                for i, item in enumerate(v, start=1):
+                    if isinstance(item, dict):
+                        items.extend(flatten_dict(item, f"{new_key}{sep}{i}", sep=sep).items())
+                    else:
+                        items.append((f"{new_key}{sep}{i}", item))
+            else:
+                items.append((new_key, v))
+    else:
+        # If the input is not a dictionary, return it as-is with the parent key
+        items.append((parent_key, d))
     return dict(items)
 
-### FLASK READ FROM GRAFANA ###
-from flask import Flask, request, jsonify
+# ### FLASK READ FROM GRAFANA ###
+# from flask import Flask, request, jsonify
 
-app = Flask(__name__)
-@app.route('/grafana-command', methods=['POST'])
-# Have Grafana send JSON payload to http://python:5000/grafana-command
+# app = Flask(__name__)
+# @app.route('/grafana-command', methods=['POST'])
+# # Have Grafana send JSON payload to http://python:5000/grafana-command
 
-def grafana_command():
-    # message = request.get_json()
-    # mqtt_client.publish(COMMAND_TOPIC, message, qos=1)
-    # return jsonify({"status": "success", "message": message})
+# def grafana_command():
+#     # message = request.get_json()
+#     # mqtt_client.publish(COMMAND_TOPIC, message, qos=1)
+#     # return jsonify({"status": "success", "message": message})
 
-    try:
-        # Get JSON payload from request
-        data = request.get_json()
+#     try:
+#         # Get JSON payload from request
+#         data = request.get_json()
         
-        # Check if data is received
-        if not data:
-            return jsonify({"error": "No JSON payload received"}), 400
+#         # Check if data is received
+#         if not data:
+#             return jsonify({"error": "No JSON payload received"}), 400
         
-        # Process the data (Publish to MQTT, then respond with a success message)
-        mqtt_client.publish(COMMAND_TOPIC, data, qos=1)
-        print("Received JSON data:", data)
-        return jsonify({"message": "JSON payload received successfully", "data": data}), 200
+#         # Process the data (Publish to MQTT, then respond with a success message)
+#         mqtt_client.publish(COMMAND_TOPIC, data, qos=1)
+#         print("Received JSON data:", data)
+#         return jsonify({"message": "JSON payload received successfully", "data": data}), 200
     
-    except Exception as e:
-        # Handle any exceptions that occur
-        return jsonify({"error": str(e)}), 500
+#     except Exception as e:
+#         # Handle any exceptions that occur
+#         return jsonify({"error": str(e)}), 500
 
 def connect_mqtt():      
     client = mqtt_client.Client(client_id=CLIENT_ID, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2, protocol=mqtt_client.MQTTv311)
@@ -319,9 +394,9 @@ def run():
     client = connect_mqtt()
     client.loop_start()
     publish_connect_reply(client)
-    publish_command(client)
+    publish_command_loop(client)
     client.loop_stop()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
     run()

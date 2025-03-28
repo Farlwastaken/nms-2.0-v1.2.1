@@ -1,0 +1,2458 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "panels": [],
+      "title": "Device State",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_temperature"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/system-state"
+            }
+          ]
+        }
+      ],
+      "title": "Temperature",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_humitidy"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/system-state"
+            }
+          ]
+        }
+      ],
+      "title": "Humidity",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_ardVoltage"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "ARD Voltage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_ardCurrent"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "ARD Voltage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 3000
+              },
+              {
+                "color": "red",
+                "value": 4000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 5,
+      "interval": "2s",
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "query": "SELECT \"response_message_fan_0_fanSpeed\" FROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" WHERE (\"topic\"::tag = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state') AND $timeFilter ORDER BY time DESC LIMIT 1",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_fan_1_fanSpeed"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "timeFrom": "now-5s",
+      "title": "Fan Real-time Speed",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "smartBox_ea3778399e77eeb4b1de318552b18d24.response_message_fan_0_fanSpeed"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Off"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "On"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 5
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_ardState"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "ARD State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Closed"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Open"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 5
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_doorState"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Door State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Normal"
+                },
+                "true": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Error!"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 5
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_spdAlert"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "SPD State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 5
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_spdSurge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Lightning Strikes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Off"
+                },
+                "true": {
+                  "color": "yellow",
+                  "index": 0,
+                  "text": "On"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_heaterState"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Heater State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Off"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "On"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 9
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_lightState"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Light State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Normal"
+                },
+                "true": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "Error!"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_waterAlert"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Water Alarm",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Off"
+                },
+                "true": {
+                  "color": "yellow",
+                  "index": 0,
+                  "text": "On"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^smartBox_ea3778399e77eeb4b1de318552b18d24\\.last$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_message_fan_1_fanState"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/slot7-state"
+            }
+          ]
+        }
+      ],
+      "title": "Fan State",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 21,
+      "panels": [],
+      "title": "Flow Monitor",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 22,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_1_rxByte\",\"response_1_txByte\",\"response_1_rxPacket\",\"response_1_txPacket\",\"response_1_rxError\",\"response_1_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 1",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_rxByte",
+            "renamePattern": "Received Bytes"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_txByte",
+            "renamePattern": "Sent Bytes"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_rxPacket",
+            "renamePattern": "Received Packets"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_txPacket",
+            "renamePattern": "Sent Packets"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_rxError",
+            "renamePattern": "Received Error Packets"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "response_1_txError",
+            "renamePattern": "Sent Error Packets"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 23,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_2_rxByte\",\"response_2_txByte\",\"response_2_rxPacket\",\"response_2_txPacket\",\"response_2_rxError\",\"response_2_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 2",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 24,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_3_rxByte\",\"response_3_txByte\",\"response_3_rxPacket\",\"response_3_txPacket\",\"response_3_rxError\",\"response_3_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 3",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 28,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_4_rxByte\",\"response_4_txByte\",\"response_4_rxPacket\",\"response_4_txPacket\",\"response_4_rxError\",\"response_4_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 4",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 27,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_5_rxByte\",\"response_5_txByte\",\"response_5_rxPacket\",\"response_5_txPacket\",\"response_5_rxError\",\"response_5_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 5",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 25,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_6_rxByte\",\"response_6_txByte\",\"response_6_rxPacket\",\"response_6_txPacket\",\"response_6_rxError\",\"response_6_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 6",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 26,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_7_rxByte\",\"response_7_txByte\",\"response_7_rxPacket\",\"response_7_txPacket\",\"response_7_rxError\",\"response_7_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 7",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 29,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": false,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "limit": "1",
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"response_8_rxByte\",\"response_8_txByte\",\"response_8_rxPacket\",\"response_8_txPacket\",\"response_8_rxError\",\"response_8_txError\" \nFROM \"smartBox_ea3778399e77eeb4b1de318552b18d24\" \nWHERE \"topic\" = 'sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics' \nORDER BY time DESC \nLIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "response_1_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "response_10_id"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "topic::tag",
+              "operator": "=",
+              "value": "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/command_reply/switch-port-statistics"
+            }
+          ]
+        }
+      ],
+      "title": "Port 8",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C147723CB20F3EF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 171
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 109,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "groupBy": [],
+          "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "All messages will appear here",
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "baseFilters": [],
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P3C147723CB20F3EF"
+        },
+        "filters": [],
+        "name": "Filters",
+        "type": "adhoc"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Powerlink Box Dashboard",
+  "uid": "ceea56zseq680e",
+  "version": 1,
+  "weekStart": ""
+}
