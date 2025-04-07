@@ -1,6 +1,5 @@
 import logging, json, time
 
-
 ### MQTT READ AND WRITE ###
 from paho.mqtt import client as mqtt_client
 
@@ -12,28 +11,9 @@ BROKER = 'emqx'
 PORT = 1883
 
 # mqtt topics
-SUB_TOPIC = "sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/#"
-CONNECT_REPLY_TOPIC = "sys/service/smartBox_ea3778399e77eeb4b1de318552b18d24/connect_reply"
-COMMAND_TOPIC = "sys/service/smartBox_ea3778399e77eeb4b1de318552b18d24/command"
-
-def new_connection():
-    global SESSION_ID
-    while True:
-        query = input("Do you want to start 1. a new connection or 2. connect to a previous session_ID? (1,2)\n")
-        if query == "1":
-            return
-        elif query == "2":
-            SESSION_ID = input("Enter the session_ID to connect to: ")
-            return
-        else:
-            print("Invalid input! Please enter 1 or 2.")
-
-def on_connect(client, userdata, flags, rc, properties=None):
-        if rc == 0 and client.is_connected():
-            client.subscribe(SUB_TOPIC)
-            print("Connected to MQTT Broker!")
-        else:
-            print(f'Failed to connect, return code {rc}')
+SUB_TOPIC = "sys/device/#"
+box_list = {} # Example key:value pair>> deviceId: [session, time] # time is not always necessary - only for new connection requests
+connected_boxes = [] # List of connected deviceId's
 
 # on_disconnect()
 FIRST_RECONNECT_DELAY = 1
@@ -42,84 +22,22 @@ MAX_RECONNECT_COUNT = 12
 MAX_RECONNECT_DELAY = 60
 FLAG_EXIT = False
 
-def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=None):
-        logging.info("Disconnected with result code: %s", rc)
-        reconnect_count, reconnect_delay = 0, FIRST_RECONNECT_DELAY
-        while reconnect_count < MAX_RECONNECT_COUNT:
-            logging.info("Reconnecting in %d seconds...", reconnect_delay)
-            time.sleep(reconnect_delay)
-
-            try:
-                client.reconnect()
-                logging.info("Reconnected successfully!")
-                return
-            except Exception as err:
-                logging.error("%s. Reconnect failed. Retrying...", err)
-
-            reconnect_delay *= RECONNECT_RATE
-            reconnect_delay = min(reconnect_delay, MAX_RECONNECT_DELAY)
-            reconnect_count += 1
-        logging.info("Reconnect failed after %s attempts. Exiting...", reconnect_count)
-        global FLAG_EXIT
-        FLAG_EXIT = True
+### INFLUXDB WRITE ###
+from influxdb_client import InfluxDBClient
+from influxdb_client.client.write_api import SYNCHRONOUS
+from influxdb_client.domain.write_precision import WritePrecision
+from influxdb_client.client.write.point import Point
 
 # on_message()
-SESSION_ID= None 
-SESSION_START_TIME = None
+DEFAULT_WRITE_PRECISION = WritePrecision.S
+url = "http://influxdb:8086"
+org = "nms"
+bucket = "logs"
+token = "root1234"
+database = InfluxDBClient(url=url, token=token, org=org)
+write_api = database.write_api(write_options=SYNCHRONOUS)
 
-def on_message(client, userdata, msg):
-    global SESSION_ID, SESSION_START_TIME
-    message = json.loads(msg.payload.decode())
-    message["topic"] = msg.topic
-    print(f"\n\nReceived message: {message}\n\n")
-    # Check if the message is a connection request
-    if message.get("type") == "connect" and SESSION_ID is None:
-        SESSION_ID = message.get("session")
-        SESSION_START_TIME = message.get("time")
-    
-    if message.get("type") == "command_reply":
-        flattened_message = flatten_dict(message)
-        flattened_response = {}
-        flattened_data = {}
-        
-        # Flatten 'response' if it exists
-        if 'response' in message:
-            if isinstance(message['response'], list):
-                # Flatten each item in the list with an index
-                for i, item in enumerate(message['response'], start=1):
-                    flattened_response.update(flatten_dict(item, f'response_{i}'))
-            else:
-                flattened_response = flatten_dict(message['response'], 'response')
-            flattened_message.update(flattened_response)
-        
-        # Flatten 'data' if it exists
-        if 'data' in message:
-            flattened_data = flatten_dict(message['data'], 'data')
-            flattened_message.update(flattened_data)
-
-        tag_keys = set(flattened_message.keys()) - set(flattened_response.keys()) - set(flattened_data.keys()) - {"time"} - {"deviceId"}
-        field_keys = set(flattened_response.keys()).union(set(flattened_data.keys()))
-
-        point = Point.from_dict(flattened_message,
-                                write_precision=DEFAULT_WRITE_PRECISION,
-                                record_measurement_key="deviceId",
-                                record_time_key="time",
-                                record_tag_keys=list(tag_keys),
-                                record_field_keys=list(field_keys))
-
-        write_api.write(bucket=bucket, org=org, record=point)
-        print(f"\n\nWriting to InfluxDB: {point.to_line_protocol()}\n\n")
-
-# publish_command()
-EXIT_COMMAND_LOOP = False
-COMMAND_TEMPLATE = {
-    "type": "command",
-    "version": 1,
-    "session": None, # Add dynamically
-    "deviceId": "smartBox_ea3778399e77eeb4b1de318552b18d24",
-    "time": None, # Add dynamically
-    "data": None # Add dynamically
-}
+# publish_command_loop()
 PRESET_COMMANDS = {
     "fan_on": {
         # "name": "Fan On",
@@ -198,134 +116,184 @@ PRESET_COMMANDS = {
     }
 }
 
-def publish_connect_reply(client):
-    global SESSION_ID, SESSION_START_TIME
-    msg_count = 0
-    while not FLAG_EXIT:
-        while SESSION_ID is None:
-            time.sleep(3)
-            print("Waiting for connection request...")
-            time.sleep(3)
-        msg_dict = {
-            "type" : "connect_reply",
-            "version": 1,
-            "session" : SESSION_ID,  # Same session as the box's connection request
-            "deviceId" : "smartBox_ea3778399e77eeb4b1de318552b18d24", # Same deviceId as the box's connection request
-            "time" : SESSION_START_TIME, # Same time as the box's connection request
-            "response" :
-            {
-                "code": 0,
-                "message" : "success"
-            },
-            # Return connection data
-            "data" :
-            {
-            "security" : "none", # Specify key mode
-            }
-        }
-        msg = json.dumps(msg_dict)
-        if not client.is_connected():
-            logging.error("publish: MQTT client is not connected!")
-            time.sleep(1)
-            continue
+### THREADING ###
+import threading
+lock = threading.Lock()
 
-        result = client.publish(CONNECT_REPLY_TOPIC, msg, qos=1)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'Sending connection reply...\n')
-            time.sleep(2)
-            break # to send one message and done
+
+def on_connect(client, userdata, flags, rc, properties=None):
+        if rc == 0 and client.is_connected():
+            client.subscribe(SUB_TOPIC)
+            print("Connected to MQTT Broker!")
         else:
-            print(f'Failed to send connection reply! Retrying...\n')
-        msg_count += 1
-        time.sleep(5)
-        if msg_count >= 5:
-            print("Failed to send connect reply message 5 times! Disconnecting...\n")
-            break
+            print(f'Failed to connect, return code {rc}')
+
+
+def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=None):
+    global FLAG_EXIT
+    logging.info("Disconnected with result code: %s", rc)
+    reconnect_count, reconnect_delay = 0, FIRST_RECONNECT_DELAY
+    while reconnect_count < MAX_RECONNECT_COUNT:
+        logging.info("Reconnecting in %d seconds...", reconnect_delay)
+        time.sleep(reconnect_delay)
+
+        try:
+            client.reconnect()
+            logging.info("Reconnected successfully!")
+            return
+        except Exception as err:
+            logging.error("%s. Reconnect failed. Retrying...", err)
+
+        reconnect_delay *= RECONNECT_RATE
+        reconnect_delay = min(reconnect_delay, MAX_RECONNECT_DELAY)
+        reconnect_count += 1
+
+    logging.info("Reconnect failed after %s attempts. Exiting...", reconnect_count)
+    with lock:
+        FLAG_EXIT = True
+
+
+def on_message(client, userdata, msg):
+    global box_list
+    try:
+        # Decode and parse the JSON payload
+        message = json.loads(msg.payload.decode())
+        print(f"\n\nReceived message: {message}\n\n")
+        
+        # Check if the message is a new connection request
+        if message.get('type') == "connect" and message.get('deviceId') not in box_list:
+            with lock:
+                box_list.update({message.get('deviceId'): [message.get('session'), message.get('time')]})  # Add new deviceId to the box_list
+            print(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}")
+        
+        if message.get('type') == "command_reply":
+            flattened_message = flatten_dict(message)
+            flattened_response = {}
+            flattened_data = {}
+            
+            # Flatten 'response' if it exists
+            if 'response' in message:
+                if isinstance(message['response'], list):
+                    # Flatten each item in the list with an index
+                    for i, item in enumerate(message['response'], start=1):
+                        flattened_response.update(flatten_dict(item, f'response_{i}'))
+                else:
+                    flattened_response = flatten_dict(message['response'], 'response')
+                flattened_message.update(flattened_response)
+            
+            # Flatten 'data' if it exists
+            if 'data' in message:
+                flattened_data = flatten_dict(message['data'], 'data')
+                flattened_message.update(flattened_data)
+            
+            tag_keys = set(flattened_message.keys()) - set(flattened_response.keys()) - set(flattened_data.keys()) - {"time"} - {"deviceId"}
+            field_keys = set(flattened_response.keys()).union(set(flattened_data.keys()))
+
+            point = Point.from_dict(flattened_message,
+                                    write_precision=DEFAULT_WRITE_PRECISION,
+                                    record_measurement_key="deviceId",
+                                    record_time_key="time",
+                                    record_tag_keys=list(tag_keys),
+                                    record_field_keys=list(field_keys))
+
+            write_api.write(bucket=bucket, org=org, record=point)
+            print(f"\n\nWriting to InfluxDB: {point.to_line_protocol()}\n\n")
+    except json.JSONDecodeError as e:
+        print(f"Failed to decode JSON payload: {e}")
+    except Exception as e:
+        print(f"An error occurred in on_message: {e}")
+
+
+def publish_connect_reply(client):
+    global box_list, connected_boxes, FLAG_EXIT
+    msg_count = 0
+    while True:
+        with lock:
+            if FLAG_EXIT:  # Check FLAG_EXIT inside the lock
+                break
+
+        boxes_to_process = []
+        with lock:  # Lock access to shared variables only when necessary
+            for box in list(box_list):  # Use list() to avoid runtime modification issues
+                if box not in connected_boxes:
+                    boxes_to_process.append(box)
+
+        for box in boxes_to_process:
+            if not client.is_connected():
+                logging.error("publish_connect_reply: MQTT client is not connected!")
+                time.sleep(1)
+                continue  
+
+            msg_dict = {
+                "type": "connect_reply",
+                "version": 1,
+                "session": box_list[box][0],  # Same session as the box's connection request
+                "deviceId": box,  # Same deviceId as the box's connection request
+                "time": box_list[box][1],  # Same time as the box's connection request
+                "response": {
+                    "code": 0,
+                    "message": "success"
+                },
+                "data": {
+                    "security": "none",  # Specify key mode
+                }
+            }
+            msg = json.dumps(msg_dict)
+            CONNECT_REPLY_TOPIC = f"sys/service/{box}/connect_reply"
+            result = client.publish(CONNECT_REPLY_TOPIC, msg, qos=1)
+            status = result[0] 
+            if status == 0:
+                logging.info(f"Sent connection reply to {box}.")
+                with lock:  # Lock only when modifying shared variables
+                    connected_boxes.append(box)
+                time.sleep(2)
+            else:
+                logging.error(f"Failed to send connection reply to {box}. Retrying...")
+            msg_count += 1
+            if msg_count >= 5:
+                logging.error("Failed to send connect reply message 5 times! Disconnecting...")
+                with lock:
+                    FLAG_EXIT = True
+        time.sleep(2)
+
 
 def publish_command_loop(client):
-    global EXIT_COMMAND_LOOP
-    while not FLAG_EXIT:
-        '''
-        command = COMMAND_TEMPLATE.copy()
-        command["session"] = SESSION_ID
-        command["time"] = int(time.time())
+    global box_list, connected_boxes, FLAG_EXIT
+    while True:
+        with lock:
+            if FLAG_EXIT:  # Check FLAG_EXIT inside the lock
+                break
 
-        command["data"] = PRESET_COMMANDS["slot7_state"]["data"].copy()
-        dashboard_1 = json.dumps(command)
-        command["data"] = PRESET_COMMANDS["system_state"]["data"].copy()
-        dashboard_2 = json.dumps(command)
-        command["data"] = PRESET_COMMANDS["flow_monitor"]["data"].copy()
-        dashboard_3 = json.dumps(command)
+        boxes_to_process = []
+        with lock:  # Lock access to shared variables only when necessary
+            boxes_to_process = {box: box_list[box] for box in box_list if box in connected_boxes}
 
-        if not client.is_connected():
-            logging.error("publish: MQTT client is not connected!")
-            time.sleep(2)
-            continue
+        for box in boxes_to_process:
+            COMMAND_TOPIC = f"sys/service/{box}/command"
+            for dashboard_section in ["slot7_state", "system_state", "flow_monitor"]:
+                command = {
+                    "type": "command",
+                    "version": 1,
+                    "session": boxes_to_process[box][0],
+                    "deviceId": box,
+                    "time": int(time.time()),
+                    "data": PRESET_COMMANDS[dashboard_section]["data"]
+                }
+                message = json.dumps(command)
 
-        result = client.publish(COMMAND_TOPIC, dashboard_1, qos=1)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'\nSending slot7_state command to device...\n')
-        else:
-            print(f'\nFailed to send slot7_state command to device!\n')
-        
-        result = client.publish(COMMAND_TOPIC, dashboard_2, qos=1)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'\nSending system_state command to device...\n')
-        else:
-            print(f'\nFailed to send system_state command to device!\n')
+                if not client.is_connected():
+                    logging.error("publish_command_loop: MQTT client is not connected! Skipping this command loop.")
+                    time.sleep(2)
+                    continue
 
-        result = client.publish(COMMAND_TOPIC, dashboard_3, qos=1)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f'\nSending system_state command to device...\n')
-        else:
-            print(f'\nFailed to send system_state command to device!\n')
-        '''
-
-        for dashboard_section in ["slot7_state", "system_state", "flow_monitor"]:
-            command = COMMAND_TEMPLATE.copy()
-            command["session"] = SESSION_ID
-            command["time"] = int(time.time())
-            
-            command["data"] = PRESET_COMMANDS[dashboard_section]["data"].copy()
-            section = json.dumps(command)
-            
-            if not client.is_connected():
-                logging.error("publish: MQTT client is not connected!")
-                time.sleep(2)
-                continue
-
-            result = client.publish(COMMAND_TOPIC, section, qos=1)
-            # result: [0, 1]
-            status = result[0]
-            if status == 0:
-                print(f'\nSending {dashboard_section} to device...\n')
-            else:
-                print(f'\nFailed to send {dashboard_section} to device!\n')
-
-
-        time.sleep(4)
-
-### INFLUXDB WRITE ###
-from influxdb_client import InfluxDBClient
-from influxdb_client.client.write_api import SYNCHRONOUS
-from influxdb_client.domain.write_precision import WritePrecision
-from influxdb_client.client.write.point import Point
-
-DEFAULT_WRITE_PRECISION = WritePrecision.S
-url = "http://influxdb:8086"
-org = "nms"
-bucket = "logs"
-token = "root1234"
-database = InfluxDBClient(url=url, token=token, org=org)
-write_api = database.write_api(write_options=SYNCHRONOUS)
+                # Publish the command to the MQTT broker
+                result = client.publish(COMMAND_TOPIC, message, qos=1)
+                status = result[0]
+                if status == 0:
+                    logging.info(f"Sent {dashboard_section} command to {box}.")
+                else:
+                    logging.error(f"Failed to send {dashboard_section} command to {box}.")
+        time.sleep(2)
 
 
 # flatten_dict() function to flatten nested dictionaries for InfluxDB
@@ -349,34 +317,6 @@ def flatten_dict(d, parent_key='', sep='_'):
         items.append((parent_key, d))
     return dict(items)
 
-# ### FLASK READ FROM GRAFANA ###
-# from flask import Flask, request, jsonify
-
-# app = Flask(__name__)
-# @app.route('/grafana-command', methods=['POST'])
-# # Have Grafana send JSON payload to http://python:5000/grafana-command
-
-# def grafana_command():
-#     # message = request.get_json()
-#     # mqtt_client.publish(COMMAND_TOPIC, message, qos=1)
-#     # return jsonify({"status": "success", "message": message})
-
-#     try:
-#         # Get JSON payload from request
-#         data = request.get_json()
-        
-#         # Check if data is received
-#         if not data:
-#             return jsonify({"error": "No JSON payload received"}), 400
-        
-#         # Process the data (Publish to MQTT, then respond with a success message)
-#         mqtt_client.publish(COMMAND_TOPIC, data, qos=1)
-#         print("Received JSON data:", data)
-#         return jsonify({"message": "JSON payload received successfully", "data": data}), 200
-    
-#     except Exception as e:
-#         # Handle any exceptions that occur
-#         return jsonify({"error": str(e)}), 500
 
 def connect_mqtt():      
     client = mqtt_client.Client(client_id=CLIENT_ID, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2, protocol=mqtt_client.MQTTv311)
@@ -387,16 +327,34 @@ def connect_mqtt():
     client.on_disconnect = on_disconnect
     return client
 
+
 def run():
+    time.sleep(5)
     logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
                         level=logging.DEBUG)
-    new_connection()
     client = connect_mqtt()
-    client.loop_start()
-    publish_connect_reply(client)
-    publish_command_loop(client)
-    client.loop_stop()
+    client.loop_start()  # Start the MQTT client loop in a separate thread
+
+    # Create threads for publish_connect_reply and publish_command_loop
+    connect_reply_thread = threading.Thread(target=publish_connect_reply, args=(client,))
+    command_loop_thread = threading.Thread(target=publish_command_loop, args=(client,))
+
+    # Start the threads
+    connect_reply_thread.start()
+    command_loop_thread.start()
+
+    # Check FLAG_EXIT in threads
+    while True:
+        with lock:
+            if FLAG_EXIT:
+                break
+
+    # Wait for threads to finish (optional, depending on your use case)
+    connect_reply_thread.join()
+    command_loop_thread.join()
+
+    client.loop_stop()  # Stop the MQTT client loop when done
+
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000)
     run()

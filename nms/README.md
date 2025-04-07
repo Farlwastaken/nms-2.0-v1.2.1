@@ -190,3 +190,86 @@ flow_monitor:
     }
   ]
 }
+
+#### MQTT Broker Information Retrieval
+
+*Command Reception*
+
+```
+{
+    "data": {
+        "service": "system", // Service
+        "method": "mqttBrokerAddr.get", // Method
+        "parms": {} // Parameters
+    }
+}
+```
+
+*Command Execution Response*
+
+system-restore
+
+```
+{
+    "response": {
+        "code": 0,
+        "message": {
+            "brokerAddrs":[
+                {
+                    "id":1,
+                    "brokerAddr":"tcp://192.168.1.252:60022",
+                    "username":"r",
+                    "password":"r"
+                }
+            ]
+        }
+    }
+}
+```
+
+#### GPS Configuration
+
+1. Get Configuration
+
+*Command Reception*
+```json
+{
+    "data": {
+        "service": "netdmate", // Service
+        "method": "mobile.gpsGet", // Method
+        "parms": {
+            "name": "lte1"
+        } // Parameters
+    }
+}
+```
+
+*Command Execution Response*
+
+netdmate-mobileGps-get
+
+```json
+{
+    "response": {
+        "code": 0,
+        "message": {
+                "latitude" : 1.000000, //double Latitude
+                "latitude_h": "N", //string Latitude Hemisphere    "N"/"S" for North/South
+                "longitude": 1.000000, //double Longitude
+                "longitude_h": "E", // string Longitude Hemisphere   "E"/"W" for East/West
+                "altitude": 1.000000, // double Altitude
+                "altitude_u": "M" // string Altitude Unit   "M" for meters
+        }
+    }
+}
+```
+sys/device/smartBox_ea3778399e77eeb4b1de318552b18d24/profile
+
+{
+    "type" : "report",
+    "version": 1,
+    "session" : "77913627-50a4-4cf7-8f84-09563991d625",
+    "deviceId" : "smartBox_ea3778399e77eeb4b1de318552b18d24",
+    "time" : 1743479900,
+    "data" : {}
+}
