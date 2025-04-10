@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: 'EMQX_MQTT_Broker'
+    type: 'grafana-mqtt-datasource'
+    isDefault: true
+    editable: true
+    version: 1
+    "jsonData": {
+      "uri": "tcp://emqx:1883"
+    }

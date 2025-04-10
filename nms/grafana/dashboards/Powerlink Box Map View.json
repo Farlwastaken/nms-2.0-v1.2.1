@@ -1,0 +1,350 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 2,
+    "links": [
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": false,
+        "title": "Navigate to Page",
+        "tooltip": "",
+        "type": "dashboards",
+        "url": ""
+      }
+    ],
+    "panels": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P3C147723CB20F3EF"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              }
+            },
+            "decimals": 8,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 24,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "basemap": {
+            "config": {},
+            "name": "Layer 0",
+            "type": "osm-standard"
+          },
+          "controls": {
+            "mouseWheelZoom": true,
+            "showAttribution": false,
+            "showDebug": false,
+            "showMeasure": true,
+            "showScale": true,
+            "showZoom": true
+          },
+          "layers": [
+            {
+              "config": {
+                "showLegend": false,
+                "style": {
+                  "color": {
+                    "fixed": "dark-red"
+                  },
+                  "opacity": 1,
+                  "rotation": {
+                    "fixed": 0,
+                    "max": 360,
+                    "min": -360,
+                    "mode": "mod"
+                  },
+                  "size": {
+                    "fixed": 10,
+                    "max": 15,
+                    "min": 2
+                  },
+                  "symbol": {
+                    "fixed": "img/icons/marker/circle.svg",
+                    "mode": "fixed"
+                  },
+                  "symbolAlign": {
+                    "horizontal": "center",
+                    "vertical": "center"
+                  },
+                  "text": {
+                    "fixed": "",
+                    "mode": "field"
+                  },
+                  "textConfig": {
+                    "fontSize": 12,
+                    "offsetY": 40,
+                    "textAlign": "center",
+                    "textBaseline": "middle"
+                  }
+                }
+              },
+              "filterData": {
+                "id": "byRefId",
+                "options": "A"
+              },
+              "location": {
+                "mode": "auto"
+              },
+              "name": "Unselected Boxes",
+              "tooltip": true,
+              "type": "markers"
+            },
+            {
+              "config": {
+                "showLegend": false,
+                "style": {
+                  "color": {
+                    "fixed": "dark-red"
+                  },
+                  "opacity": 1,
+                  "rotation": {
+                    "fixed": 0,
+                    "max": 360,
+                    "min": -360,
+                    "mode": "mod"
+                  },
+                  "size": {
+                    "fixed": 50,
+                    "max": 15,
+                    "min": 2
+                  },
+                  "symbol": {
+                    "fixed": "img/icons/unicons/box.svg",
+                    "mode": "fixed"
+                  },
+                  "symbolAlign": {
+                    "horizontal": "center",
+                    "vertical": "center"
+                  },
+                  "text": {
+                    "field": "deviceId",
+                    "fixed": "",
+                    "mode": "field"
+                  },
+                  "textConfig": {
+                    "fontSize": 18,
+                    "offsetX": 0,
+                    "offsetY": 40,
+                    "textAlign": "center",
+                    "textBaseline": "middle"
+                  }
+                }
+              },
+              "filterData": {
+                "id": "byRefId",
+                "options": "B"
+              },
+              "location": {
+                "mode": "auto"
+              },
+              "name": "Selected Boxes",
+              "tooltip": true,
+              "type": "markers"
+            }
+          ],
+          "tooltip": {
+            "mode": "details"
+          },
+          "view": {
+            "allLayers": true,
+            "id": "fit",
+            "lat": 10,
+            "lon": 106,
+            "padding": 50,
+            "zoom": 15
+          }
+        },
+        "pluginVersion": "11.5.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "P3C147723CB20F3EF"
+            },
+            "groupBy": [],
+            "hide": false,
+            "measurement": "device_locations",
+            "orderByTime": "DESC",
+            "policy": "default",
+            "query": "SELECT *\nFROM \"device_locations\" \nWHERE \"deviceId\" !~ /^${deviceId:regex}$/ AND $timeFilter \nORDER BY time DESC",
+            "rawQuery": true,
+            "refId": "A",
+            "resultFormat": "table",
+            "select": [
+              [
+                {
+                  "params": [
+                    "*"
+                  ],
+                  "type": "field"
+                }
+              ]
+            ],
+            "tags": [
+              {
+                "key": "deviceId::tag",
+                "operator": "!=",
+                "value": "$deviceId"
+              }
+            ]
+          },
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "P3C147723CB20F3EF"
+            },
+            "groupBy": [
+              {
+                "params": [
+                  "$__interval"
+                ],
+                "type": "time"
+              }
+            ],
+            "hide": false,
+            "measurement": "device_locations",
+            "orderByTime": "DESC",
+            "policy": "default",
+            "query": "SELECT *\nFROM \"device_locations\"\nWHERE (\"deviceId\"::tag =~ /^$deviceId$/) AND $timeFilter\nORDER BY time DESC",
+            "rawQuery": true,
+            "refId": "B",
+            "resultFormat": "table",
+            "select": [
+              [
+                {
+                  "params": [
+                    "latitude"
+                  ],
+                  "type": "field"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "longitude"
+                  ],
+                  "type": "field"
+                }
+              ]
+            ],
+            "tags": [
+              {
+                "key": "deviceId::tag",
+                "operator": "=~",
+                "value": "/^$deviceId$/"
+              }
+            ]
+          }
+        ],
+        "title": "Map View",
+        "type": "geomap"
+      }
+    ],
+    "preload": true,
+    "refresh": "30m",
+    "schemaVersion": 40,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "allowCustomValue": true,
+          "current": {
+            "text": [
+              "smartBox_56b6440c6e7421e397737893aeb2a36f"
+            ],
+            "value": [
+              "smartBox_56b6440c6e7421e397737893aeb2a36f"
+            ]
+          },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C147723CB20F3EF"
+          },
+          "definition": "SHOW MEASUREMENTS",
+          "description": "",
+          "includeAll": true,
+          "label": "Device ID",
+          "multi": true,
+          "name": "deviceId",
+          "options": [],
+          "query": {
+            "query": "SHOW MEASUREMENTS",
+            "refId": "InfluxVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": "/^(?!device_locations$).*/",
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-10s",
+      "to": "now"
+    },
+    "timepicker": {
+    "refresh_intervals": [
+      "5m",
+      "10m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "6h",
+      "12h",
+      "1d"
+    ]
+  },
+    "timezone": "browser",
+    "title": "Powerlink Box Map View",
+    "uid": "feigd3muel7nkf",
+    "version": 1,
+    "weekStart": ""
+  }

@@ -1,0 +1,5 @@
+apiVersion: 1
+
+# plugins:
+#     - name: volkovlabs-form-panel
+#       version: 5.1.0
