@@ -1,7 +1,14 @@
 import logging, json, time
 
-### MQTT READ AND WRITE ###
 from paho.mqtt import client as mqtt_client
+
+from influxdb_client import InfluxDBClient
+from influxdb_client.client.write_api import SYNCHRONOUS
+from influxdb_client.domain.write_precision import WritePrecision
+from influxdb_client.client.write.point import Point
+
+import threading
+lock = threading.Lock() # Mutex
 
 # connect_mqtt()
 CLIENT_ID = f'python-mqtt-tcp-client'
@@ -21,12 +28,6 @@ RECONNECT_RATE = 2
 MAX_RECONNECT_COUNT = 12
 MAX_RECONNECT_DELAY = 60
 FLAG_EXIT = False
-
-### INFLUXDB WRITE ###
-from influxdb_client import InfluxDBClient
-from influxdb_client.client.write_api import SYNCHRONOUS
-from influxdb_client.domain.write_precision import WritePrecision
-from influxdb_client.client.write.point import Point
 
 # on_message()
 DEFAULT_WRITE_PRECISION = WritePrecision.S
@@ -116,11 +117,6 @@ PRESET_COMMANDS = {
     }
 }
 
-### THREADING ###
-import threading
-lock = threading.Lock() # Mutex
-
-
 def on_connect(client, userdata, flags, rc, properties=None):
         if rc == 0 and client.is_connected():
             client.subscribe(SUB_TOPIC)
@@ -195,6 +191,7 @@ def on_message(client, userdata, msg):
                 flattened_message['response_longitude'] *= multiplier_lon
                 del flattened_message['response_longitude_h']
                 
+                # Measurement name: "device_locations"
                 point = Point("device_locations") \
                         .tag("deviceId", flattened_message["deviceId"]) \
                         .field("latitude", flattened_message["response_latitude"]) \
@@ -205,6 +202,7 @@ def on_message(client, userdata, msg):
                 tag_keys = set(flattened_message.keys()) - set(flattened_response.keys()) - set(flattened_data.keys()) - {"time"} - {"deviceId"}
                 field_keys = set(flattened_response.keys()).union(set(flattened_data.keys()))
 
+                # Measurement name: $deviceId
                 point = Point.from_dict(flattened_message,
                         write_precision=DEFAULT_WRITE_PRECISION,
                         record_measurement_key="deviceId",
@@ -214,6 +212,7 @@ def on_message(client, userdata, msg):
 
             write_api.write(bucket=bucket, org=org, record=point)
             print(f"\n\nWriting to InfluxDB: {point.to_line_protocol()}\n\n")
+
     except json.JSONDecodeError as e:
         print(f"Failed to decode JSON payload: {e}")
     except Exception as e:
