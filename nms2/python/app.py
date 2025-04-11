@@ -10,6 +10,13 @@ from influxdb_client.client.write.point import Point
 import threading
 lock = threading.Lock() # Mutex
 
+# import customtkinter as ctk
+# ctk.set_appearance_mode("dark")
+# ctk.set_default_color_theme("orange")
+# login_page = ctk.CTk()
+# login_page.geometry("400x400")
+# login_page.title("NMS 2.0 Login")
+
 # connect_mqtt()
 CLIENT_ID = f'python-mqtt-tcp-client'
 USERNAME = 'root'
@@ -347,6 +354,8 @@ def run():
                         level=logging.DEBUG)
     client = connect_mqtt()
     client.loop_start()
+    
+    # login_page.mainloop()
 
     connect_reply_thread = threading.Thread(target=publish_connect_reply, args=(client,))
     command_loop_thread = threading.Thread(target=publish_command_loop, args=(client,))
