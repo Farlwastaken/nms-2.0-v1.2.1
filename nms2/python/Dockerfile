@@ -1,5 +1,5 @@
-# Use Python 3.13.2 image
-FROM python:3.13.2
+# Use Python alpine image
+FROM python:alpine
 
 # Set working directory to /python
 WORKDIR /python
