@@ -92,7 +92,7 @@
               "showLegend": false,
               "style": {
                 "color": {
-                  "fixed": "dark-red"
+                  "fixed": "dark-purple"
                 },
                 "opacity": 1,
                 "rotation": {
@@ -102,7 +102,7 @@
                   "mode": "mod"
                 },
                 "size": {
-                  "fixed": 10,
+                  "fixed": 5,
                   "max": 15,
                   "min": 2
                 },
@@ -142,7 +142,7 @@
               "showLegend": false,
               "style": {
                 "color": {
-                  "fixed": "dark-red"
+                  "fixed": "dark-blue"
                 },
                 "opacity": 1,
                 "rotation": {
@@ -157,7 +157,7 @@
                   "min": 2
                 },
                 "symbol": {
-                  "fixed": "img/icons/unicons/box.svg",
+                  "fixed": "img/icons/unicons/database.svg",
                   "mode": "fixed"
                 },
                 "symbolAlign": {

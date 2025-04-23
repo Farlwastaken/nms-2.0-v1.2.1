@@ -47,40 +47,6 @@ write_api = database.write_api(write_options=SYNCHRONOUS)
 
 # publish_command_loop()
 PRESET_COMMANDS = {
-    "fan_on": {
-        # "name": "Fan On",
-        "data": {
-            "service": "slot7",
-            "method": "fanConfig.set",
-            "parms": {
-                "autoControl": False,
-                "tempThresholdOn": 40,
-                "tempThresholdOff": 35,
-                "fans": [{"id": 1, "speed": None, "sw": True}] # Set speed before publish
-            }
-        }
-    },
-    "fan_off": {
-        # "name": "Fan Off",
-        "data": {
-            "service": "slot7",
-            "method": "fanConfig.set",
-            "parms": {
-                "autoControl": False,
-                "tempThresholdOn": 40,
-                "tempThresholdOff": 35,
-                "fans": [{"id": 1, "speed": 0, "sw": True}]
-            }
-        }
-    },
-    "fan_config": {
-        # "name": "Fan Configuration",
-        "data": {
-            "service": "slot7",
-            "method": "fanConfig.get",
-            "parms": {}
-        }
-    },
     "slot7_state": {
         # "name": "Fan Real-time Speed",
         "data": {
@@ -103,14 +69,6 @@ PRESET_COMMANDS = {
             "service": "netdmate",
             "method": "mobile.gpsGet",
             "parms": {"name": "lte1"}
-        }
-    },
-    "reboot": {
-        # "name": "Reboot Device",
-        "data": {
-            "service": "system",
-            "method": "reboot",
-            "parms": {}
         }
     },
     "flow_monitor": {
@@ -168,7 +126,7 @@ def on_message(client, userdata, msg):
                 box_list.update({message.get('deviceId'): [message.get('session'), message.get('time')]})
             print(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}")
         
-        # Write all command reply to InfluxDB
+        # Write all command_reply messages to InfluxDB
         if message.get('type') == "command_reply":
             flattened_message = flatten_dict(message)
             flattened_response = {}
@@ -190,12 +148,12 @@ def on_message(client, userdata, msg):
             if 'response_latitude' in flattened_message:
                 direction_lat = flattened_message['response_latitude_h']
                 multiplier_lat = 1 if direction_lat == 'N' else -1
-                flattened_message['response_latitude'] *= multiplier_lat
+                flattened_message['response_latitude'] = float(flattened_message['response_latitude']) * multiplier_lat
                 del flattened_message['response_latitude_h']
 
                 direction_lon = flattened_message['response_longitude_h']
                 multiplier_lon = 1 if direction_lon == 'E' else -1
-                flattened_message['response_longitude'] *= multiplier_lon
+                flattened_message['response_longitude'] = float(flattened_message['response_longitude']) * multiplier_lon
                 del flattened_message['response_longitude_h']
                 
                 # Measurement name: "device_locations"
