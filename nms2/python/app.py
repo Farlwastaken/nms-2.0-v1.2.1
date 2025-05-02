@@ -1,21 +1,16 @@
-import logging, json, time
-
+import logging, json, time, threading
 from paho.mqtt import client as mqtt_client
-
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 from influxdb_client.domain.write_precision import WritePrecision
 from influxdb_client.client.write.point import Point
 
-import threading
-lock = threading.Lock() # Mutex
 
-# import customtkinter as ctk
-# ctk.set_appearance_mode("dark")
-# ctk.set_default_color_theme("orange")
-# login_page = ctk.CTk()
-# login_page.geometry("400x400")
-# login_page.title("NMS 2.0 Login")
+lock = threading.Lock() # Mutex
+stop_event = threading.Event()  # Global stop event
+
+box_list = {} # Example key:value pair >> deviceId: [session, time]
+connected_boxes = [] # Connected "deviceId"s
 
 # connect_mqtt()
 CLIENT_ID = f'python-mqtt-tcp-client'
@@ -23,21 +18,16 @@ USERNAME = 'root'
 PASSWORD = 'root1234'
 BROKER = 'emqx'
 PORT = 1883
-
-# mqtt topics
 SUB_TOPIC = "sys/device/#"
-box_list = {} # Example key:value pair >> deviceId: [session, time]
-connected_boxes = [] # Connected "deviceId"s
 
 # on_disconnect()
-FIRST_RECONNECT_DELAY = 1
-RECONNECT_RATE = 2
-MAX_RECONNECT_COUNT = 12
-MAX_RECONNECT_DELAY = 60
-FLAG_EXIT = False
+first_reconnect_delay = 1
+reconnect_rate = 2
+max_reconnect_count = 12
+max_reconnect_delay = 60
 
 # on_message()
-DEFAULT_WRITE_PRECISION = WritePrecision.S
+default_write_precision = WritePrecision.S
 url = "http://influxdb:8086"
 org = "nms"
 bucket = "logs"
@@ -82,6 +72,7 @@ PRESET_COMMANDS = {
     }
 }
 
+
 def on_connect(client, userdata, flags, rc, properties=None):
         if rc == 0 and client.is_connected():
             client.subscribe(SUB_TOPIC)
@@ -91,10 +82,10 @@ def on_connect(client, userdata, flags, rc, properties=None):
 
 
 def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=None):
-    global FLAG_EXIT
     logging.info("Disconnected with result code: %s", rc)
-    reconnect_count, reconnect_delay = 0, FIRST_RECONNECT_DELAY
-    while reconnect_count < MAX_RECONNECT_COUNT:
+    reconnect_count = 0 
+    reconnect_delay = first_reconnect_delay
+    while reconnect_count < max_reconnect_count and not stop_event.is_set():
         logging.info("Reconnecting in %d seconds...", reconnect_delay)
         time.sleep(reconnect_delay)
 
@@ -105,13 +96,12 @@ def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=Non
         except Exception as err:
             logging.error("%s. Reconnect failed. Retrying...", err)
 
-        reconnect_delay *= RECONNECT_RATE
-        reconnect_delay = min(reconnect_delay, MAX_RECONNECT_DELAY)
+        reconnect_delay *= reconnect_rate
+        reconnect_delay = min(reconnect_delay, max_reconnect_delay)
         reconnect_count += 1
 
     logging.info("Reconnect failed after %s attempts. Exiting...", reconnect_count)
-    with lock:
-        FLAG_EXIT = True
+    stop_event.set()
 
 
 def on_message(client, userdata, msg):
@@ -128,52 +118,39 @@ def on_message(client, userdata, msg):
         
         # Write all command_reply messages to InfluxDB
         if message.get('type') == "command_reply":
-            flattened_message = flatten_dict(message)
-            flattened_response = {}
-            flattened_data = {}
-            
-            if 'response' in message:
-                if isinstance(message['response'], list):
-                    for i, item in enumerate(message['response'], start=1):
-                        flattened_response.update(flatten_dict(item, f'response_{i}'))
-                else:
-                    flattened_response = flatten_dict(message['response'], 'response')
-                flattened_message.update(flattened_response)
-            
-            if 'data' in message:
-                flattened_data = flatten_dict(message['data'], 'data')
-                flattened_message.update(flattened_data)
-            
-            # If GPS message, send to device_locations measurement
-            if 'response_latitude' in flattened_message:
-                direction_lat = flattened_message['response_latitude_h']
-                multiplier_lat = 1 if direction_lat == 'N' else -1
-                flattened_message['response_latitude'] = float(flattened_message['response_latitude']) * multiplier_lat
-                del flattened_message['response_latitude_h']
+            # Flatten the message and track keys from 'response'
+            flattened_message, field_keys = flatten_dict(message)
 
-                direction_lon = flattened_message['response_longitude_h']
+            # If GPS message, send to device_locations measurement
+            if 'latitude' in flattened_message:
+                direction_lat = flattened_message['latitude_h']
+                multiplier_lat = 1 if direction_lat == 'N' else -1
+                flattened_message['latitude'] = float(flattened_message['latitude']) * multiplier_lat
+                del flattened_message['latitude_h']
+
+                direction_lon = flattened_message['longitude_h']
                 multiplier_lon = 1 if direction_lon == 'E' else -1
-                flattened_message['response_longitude'] = float(flattened_message['response_longitude']) * multiplier_lon
-                del flattened_message['response_longitude_h']
-                
+                flattened_message['longitude'] = float(flattened_message['longitude']) * multiplier_lon
+                del flattened_message['longitude_h']
+
                 # Measurement name: "device_locations"
                 point = Point("device_locations") \
                         .tag("deviceId", flattened_message["deviceId"]) \
-                        .field("latitude", flattened_message["response_latitude"]) \
-                        .field("longitude", flattened_message["response_longitude"]) \
-                        .time(flattened_message["time"], write_precision=DEFAULT_WRITE_PRECISION)
-                
+                        .field("latitude", flattened_message["latitude"]) \
+                        .field("longitude", flattened_message["longitude"]) \
+                        .time(flattened_message["time"], write_precision=default_write_precision)
+            
             else:
-                tag_keys = set(flattened_message.keys()) - set(flattened_response.keys()) - set(flattened_data.keys()) - {"time"} - {"deviceId"}
-                field_keys = set(flattened_response.keys()).union(set(flattened_data.keys()))
+                # Separate tags and fields
+                tag_keys = set(flattened_message.keys()) - field_keys - {"time", "deviceId"}
 
                 # Measurement name: $deviceId
                 point = Point.from_dict(flattened_message,
-                        write_precision=DEFAULT_WRITE_PRECISION,
-                        record_measurement_key="deviceId",
-                        record_time_key="time",
-                        record_tag_keys=list(tag_keys),
-                        record_field_keys=list(field_keys))
+                                        write_precision=default_write_precision,
+                                        record_measurement_key="deviceId",
+                                        record_time_key="time",
+                                        record_tag_keys=list(tag_keys),
+                                        record_field_keys=list(field_keys))
 
             write_api.write(bucket=bucket, org=org, record=point)
             print(f"\n\nWriting to InfluxDB: {point.to_line_protocol()}\n\n")
@@ -185,13 +162,9 @@ def on_message(client, userdata, msg):
 
 
 def publish_connect_reply(client):
-    global box_list, connected_boxes, FLAG_EXIT
+    global box_list, connected_boxes
     msg_count = 0
-    while True:
-        with lock:
-            if FLAG_EXIT:
-                break
-
+    while not stop_event.is_set(): 
         boxes_to_process = []
         with lock:
             for box in list(box_list): 
@@ -232,21 +205,15 @@ def publish_connect_reply(client):
             msg_count += 1
             if msg_count >= 5:
                 logging.error("Failed to send connect reply message 5 times! Disconnecting...")
-                with lock:
-                    FLAG_EXIT = True
-        time.sleep(2) # Refresh rate
-
+                stop_event.set()
+        time.sleep(2)  # Refresh rate
 
 def publish_command_loop(client):
-    global box_list, connected_boxes, FLAG_EXIT
-    while True:
-        with lock:
-            if FLAG_EXIT:
-                break
-
+    global box_list, connected_boxes
+    while not stop_event.is_set(): 
         boxes_to_process = []
         with lock:
-            boxes_to_process = {box: box_list[box] for box in box_list if box in connected_boxes}
+            boxes_to_process = {box: box_list[box] for box in connected_boxes}
 
         for box in boxes_to_process:
             COMMAND_TOPIC = f"sys/service/{box}/command"
@@ -272,29 +239,49 @@ def publish_command_loop(client):
                     logging.info(f"Sent {dashboard_section} command to {box}.")
                 else:
                     logging.error(f"Failed to send {dashboard_section} command to {box}.")
-        time.sleep(2) # Refresh rate
+        time.sleep(2)  # Refresh rate
 
 
-# InfluxDB cannot handle nested dictionaries, need to flatten
-def flatten_dict(d, parent_key='', sep='_'):
+# InfluxDB cannot handle dictionary or list data types, need to flatten
+def flatten_dict(d, parent_key='', tracked_keys=None, under_response=False):
+    sep = '_'
+    strip_keys = ['response', 'message']
+
+    if tracked_keys is None:
+        tracked_keys = []
+
     items = []
+
     if isinstance(d, dict):
-        for k, v in d.items():
-            new_key = f"{parent_key}{sep}{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.extend(flatten_dict(v, new_key, sep=sep).items())
-            elif isinstance(v, list):
-                for i, item in enumerate(v, start=1):
-                    if isinstance(item, dict):
-                        items.extend(flatten_dict(item, f"{new_key}{sep}{i}", sep=sep).items())
-                    else:
-                        items.append((f"{new_key}{sep}{i}", item))
+        for key, value in d.items():
+            next_under_response = under_response or key == 'response'
+
+            for prefix in strip_keys:
+                if key.startswith(f"{prefix}{sep}"):
+                    key = key[len(prefix) + len(sep):]
+                elif key == prefix:
+                    key = ''
+            new_key = f"{parent_key}{sep}{key}" if parent_key else key
+
+            if isinstance(value, dict):
+                sub_dict, _ = flatten_dict(value, new_key, tracked_keys, next_under_response)
+                items.extend(sub_dict.items())
+            elif isinstance(value, list):
+                for i, item in enumerate(value, start=1):
+                    list_key = f"{new_key}{sep}{i}" if new_key else str(i)
+                    sub_dict, _ = flatten_dict(item, list_key, tracked_keys, next_under_response)
+                    items.extend(sub_dict.items())
             else:
-                items.append((new_key, v))
+                items.append((new_key, value))
+                if next_under_response:
+                    tracked_keys.append(new_key)
+
     else:
         items.append((parent_key, d))
-    return dict(items)
+        if under_response:
+            tracked_keys.append(parent_key)
 
+    return dict(items), set(tracked_keys)
 
 def connect_mqtt():      
     client = mqtt_client.Client(client_id=CLIENT_ID, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2, protocol=mqtt_client.MQTTv311)
@@ -312,8 +299,6 @@ def run():
                         level=logging.DEBUG)
     client = connect_mqtt()
     client.loop_start()
-    
-    # login_page.mainloop()
 
     connect_reply_thread = threading.Thread(target=publish_connect_reply, args=(client,))
     command_loop_thread = threading.Thread(target=publish_command_loop, args=(client,))
@@ -321,10 +306,12 @@ def run():
     connect_reply_thread.start()
     command_loop_thread.start()
 
-    while True:
-        with lock:
-            if FLAG_EXIT:
-                break
+    try:
+        while not stop_event.is_set():  # Main thread waits for stop signal
+            time.sleep(1)
+    except KeyboardInterrupt:
+        logging.info("KeyboardInterrupt received. Stopping threads...")
+        stop_event.set()
 
     connect_reply_thread.join()
     command_loop_thread.join()

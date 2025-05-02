@@ -120,7 +120,7 @@
             [
               {
                 "params": [
-                  "response_message_temperature"
+                  "temperature"
                 ],
                 "type": "field"
               },
@@ -129,7 +129,8 @@
                 "type": "last"
               }
             ]
-          ]
+          ],
+          "tags": []
         }
       ],
       "title": "Temperature",
@@ -208,7 +209,7 @@
             [
               {
                 "params": [
-                  "response_message_humitidy"
+                  "humitidy"
                 ],
                 "type": "field"
               },
@@ -217,7 +218,8 @@
                 "type": "last"
               }
             ]
-          ]
+          ],
+          "tags": []
         }
       ],
       "title": "Humidity",
@@ -292,12 +294,13 @@
             [
               {
                 "params": [
-                  "response_message_ardVoltage"
+                  "ardVoltage"
                 ],
                 "type": "field"
               }
             ]
-          ]
+          ],
+          "tags": []
         }
       ],
       "title": "ARD Voltage",
@@ -372,7 +375,7 @@
             [
               {
                 "params": [
-                  "response_message_ardCurrent"
+                  "ardCurrent"
                 ],
                 "type": "field"
               },
@@ -381,7 +384,8 @@
                 "type": "last"
               }
             ]
-          ]
+          ],
+          "tags": []
         }
       ],
       "title": "ARD Current",
@@ -465,7 +469,7 @@
             [
               {
                 "params": [
-                  "response_message_fan_1_fanSpeed"
+                  "fan_1_fanSpeed"
                 ],
                 "type": "field"
               },
@@ -565,7 +569,7 @@
             [
               {
                 "params": [
-                  "response_message_ardState"
+                  "ardState"
                 ],
                 "type": "field"
               },
@@ -679,7 +683,7 @@
             [
               {
                 "params": [
-                  "response_message_doorState"
+                  "doorState"
                 ],
                 "type": "field"
               },
@@ -793,7 +797,7 @@
             [
               {
                 "params": [
-                  "response_message_spdAlert"
+                  "spdAlert"
                 ],
                 "type": "field"
               },
@@ -891,7 +895,7 @@
             [
               {
                 "params": [
-                  "response_message_spdSurge"
+                  "spdSurge"
                 ],
                 "type": "field"
               },
@@ -993,7 +997,7 @@
             [
               {
                 "params": [
-                  "response_message_heaterState"
+                  "heaterState"
                 ],
                 "type": "field"
               },
@@ -1111,7 +1115,7 @@
             [
               {
                 "params": [
-                  "response_message_lightState"
+                  "lightState"
                 ],
                 "type": "field"
               },
@@ -1225,7 +1229,7 @@
             [
               {
                 "params": [
-                  "response_message_waterAlert"
+                  "waterAlert"
                 ],
                 "type": "field"
               },
@@ -1334,14 +1338,14 @@
           "orderByTime": "DESC",
           "policy": "default",
           "query": "SELECT last(\"response_message_fan_1_fanState\") FROM /^$deviceId$/ WHERE $timeFilter ORDER BY time DESC LIMIT 1",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
             [
               {
                 "params": [
-                  "response_message_fan_1_fanState"
+                  "fan_1_fanState"
                 ],
                 "type": "field"
               },
@@ -1455,7 +1459,7 @@
             [
               {
                 "params": [
-                  "response_message_dateTime"
+                  "dateTime"
                 ],
                 "type": "field"
               },
@@ -1468,7 +1472,7 @@
           "tags": []
         }
       ],
-      "title": "Date Time",
+      "title": "DateTime",
       "type": "stat"
     },
     {
@@ -1551,14 +1555,14 @@
           "orderByTime": "DESC",
           "policy": "default",
           "query": "SELECT last(\"response_message_runTime\") FROM /^$deviceId$/ WHERE $timeFilter ORDER BY time DESC LIMIT 1",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
             [
               {
                 "params": [
-                  "response_message_runTime"
+                  "runTime"
                 ],
                 "type": "field"
               },
@@ -1571,7 +1575,7 @@
           "tags": []
         }
       ],
-      "title": "Run Time",
+      "title": "Runtime",
       "transformations": [
         {
           "id": "convertFieldType",
@@ -1695,7 +1699,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_1_rxByte\",\"response_1_txByte\",\"response_1_rxPacket\",\"response_1_txPacket\",\"response_1_rxError\",\"response_1_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"1_rxByte\",\"1_txByte\",\"1_rxPacket\",\"1_txPacket\",\"1_rxError\",\"1_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -1751,6 +1755,13 @@
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "1_rxByte": "Received Bytes",
+              "1_rxError": "Received Error Packets",
+              "1_rxPacket": "Received Packets",
+              "1_txByte": "Sent Bytes",
+              "1_txError": "Sent Error Packets",
+              "1_txPacket": "Sent Packets",
+              "Time": "Time",
               "response_1_rxByte": "Received Bytes",
               "response_1_rxError": "Received Error Packets",
               "response_1_rxPacket": "Received Packets",
@@ -1873,7 +1884,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_1_rxByte\",\"response_1_txByte\",\"response_1_rxPacket\",\"response_1_txPacket\",\"response_1_rxError\",\"response_1_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"1_rxByte\",\"1_txByte\",\"1_rxPacket\",\"1_txPacket\",\"1_rxError\",\"1_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -1998,7 +2009,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_2_rxByte\",\"response_2_txByte\",\"response_2_rxPacket\",\"response_2_txPacket\",\"response_2_rxError\",\"response_2_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"2_rxByte\",\"2_txByte\",\"2_rxPacket\",\"2_txPacket\",\"2_rxError\",\"2_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2123,7 +2134,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_3_rxByte\",\"response_3_txByte\",\"response_3_rxPacket\",\"response_3_txPacket\",\"response_3_rxError\",\"response_3_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"3_rxByte\",\"3_txByte\",\"3_rxPacket\",\"3_txPacket\",\"3_rxError\",\"3_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2248,7 +2259,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_4_rxByte\",\"response_4_txByte\",\"response_4_rxPacket\",\"response_4_txPacket\",\"response_4_rxError\",\"response_4_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"4_rxByte\",\"4_txByte\",\"4_rxPacket\",\"4_txPacket\",\"4_rxError\",\"4_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2373,7 +2384,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_5_rxByte\",\"response_5_txByte\",\"response_5_rxPacket\",\"response_5_txPacket\",\"response_5_rxError\",\"response_5_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"5_rxByte\",\"5_txByte\",\"5_rxPacket\",\"5_txPacket\",\"5_rxError\",\"5_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2498,7 +2509,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_6_rxByte\",\"response_6_txByte\",\"response_6_rxPacket\",\"response_6_txPacket\",\"response_6_rxError\",\"response_6_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"6_rxByte\",\"6_txByte\",\"6_rxPacket\",\"6_txPacket\",\"6_rxError\",\"6_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2623,7 +2634,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_7_rxByte\",\"response_7_txByte\",\"response_7_rxPacket\",\"response_7_txPacket\",\"response_7_rxError\",\"response_7_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"7_rxByte\",\"7_txByte\",\"7_rxPacket\",\"7_txPacket\",\"7_rxError\",\"7_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -2748,7 +2759,7 @@
           "measurement": "smartBox_ea3778399e77eeb4b1de318552b18d24",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"response_8_rxByte\",\"response_8_txByte\",\"response_8_rxPacket\",\"response_8_txPacket\",\"response_8_rxError\",\"response_8_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
+          "query": "SELECT \"8_rxByte\",\"8_txByte\",\"8_rxPacket\",\"8_txPacket\",\"8_rxError\",\"8_txError\" \nFROM /^$deviceId$/ \nWHERE $timeFilter \nORDER BY time DESC \nLIMIT 1",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
