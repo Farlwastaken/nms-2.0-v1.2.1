@@ -5,6 +5,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 from influxdb_client.domain.write_precision import WritePrecision
 from influxdb_client.client.write.point import Point
 
+### GLOBAL VARIABLES, PARAMETERS, OBJECTS AND SETTINGS ###
 
 lock = threading.Lock() # Mutex
 stop_event = threading.Event()  # Global stop event
@@ -22,9 +23,9 @@ SUB_TOPIC = "sys/device/#"
 
 # on_disconnect()
 first_reconnect_delay = 1
-reconnect_rate = 2
+reconnect_rate = 2 
 max_reconnect_count = 12
-max_reconnect_delay = 60
+max_reconnect_delay = 60   
 
 # on_message()
 default_write_precision = WritePrecision.S
@@ -72,19 +73,22 @@ PRESET_COMMANDS = {
     }
 }
 
+### METHODS ###
 
 def on_connect(client, userdata, flags, rc, properties=None):
         if rc == 0 and client.is_connected():
             client.subscribe(SUB_TOPIC)
-            print("Connected to MQTT Broker!")
+            logging.info("Connected to MQTT Broker!")
         else:
-            print(f'Failed to connect, return code {rc}')
+            logging.error(f'Failed to connect, return code {rc}')
 
 
 def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=None):
-    logging.info("Disconnected with result code: %s", rc)
-    reconnect_count = 0 
+    logging.info("Disconnected with result code: %s", rc) 
+
+    reconnect_count = 0
     reconnect_delay = first_reconnect_delay
+    
     while reconnect_count < max_reconnect_count and not stop_event.is_set():
         logging.info("Reconnecting in %d seconds...", reconnect_delay)
         time.sleep(reconnect_delay)
@@ -108,31 +112,39 @@ def on_message(client, userdata, msg):
     global box_list
     try:
         message = json.loads(msg.payload.decode())
-        print(f"\n\nReceived message: {message}\n\n")
+        logging.debug(f"Received message: {message}")
         
+        # Print data types of all fields in the received JSON message
+        logging.debug("Data types of fields in the received JSON message:")
+        for key, value in message.items():
+            logging.debug(f"Field: {key}, Type: {type(value).__name__}")
+
         # Update box_list from connection request
         if message.get('type') == "connect":
             with lock:
                 box_list.update({message.get('deviceId'): [message.get('session'), message.get('time')]})
-            print(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}")
+            logging.info(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}")
         
         # Write all command_reply messages to InfluxDB
         if message.get('type') == "command_reply":
             # Flatten the message and track keys from 'response'
             flattened_message, field_keys = flatten_dict(message)
 
+            # Print data types of all fields in the flattened dictionary
+            logging.debug("Data types of fields in the flattened dictionary:")
+            for key, value in flattened_message.items():
+                logging.debug(f"Field: {key}, Type: {type(value).__name__}")
+
             # If GPS message, send to device_locations measurement
             if 'latitude' in flattened_message:
                 direction_lat = flattened_message['latitude_h']
                 multiplier_lat = 1 if direction_lat == 'N' else -1
                 flattened_message['latitude'] = float(flattened_message['latitude']) * multiplier_lat
-                del flattened_message['latitude_h']
-
+                
                 direction_lon = flattened_message['longitude_h']
                 multiplier_lon = 1 if direction_lon == 'E' else -1
                 flattened_message['longitude'] = float(flattened_message['longitude']) * multiplier_lon
-                del flattened_message['longitude_h']
-
+                
                 # Measurement name: "device_locations"
                 point = Point("device_locations") \
                         .tag("deviceId", flattened_message["deviceId"]) \
@@ -142,9 +154,10 @@ def on_message(client, userdata, msg):
             
             else:
                 # Separate tags and fields
+                field_keys = field_keys - {"code"}
                 tag_keys = set(flattened_message.keys()) - field_keys - {"time", "deviceId"}
 
-                # Measurement name: $deviceId
+                # Measurement name: ${deviceId} - each device has its own measurement
                 point = Point.from_dict(flattened_message,
                                         write_precision=default_write_precision,
                                         record_measurement_key="deviceId",
@@ -153,12 +166,12 @@ def on_message(client, userdata, msg):
                                         record_field_keys=list(field_keys))
 
             write_api.write(bucket=bucket, org=org, record=point)
-            print(f"\n\nWriting to InfluxDB: {point.to_line_protocol()}\n\n")
+            logging.info(f"\nWriting to InfluxDB: {point.to_line_protocol()}\n")
 
     except json.JSONDecodeError as e:
-        print(f"Failed to decode JSON payload: {e}")
+        logging.error(f"Failed to decode JSON payload: {e}")
     except Exception as e:
-        print(f"An error occurred in on_message: {e}")
+        logging.error(f"An error occurred in on_message: {e}")
 
 
 def publish_connect_reply(client):
@@ -206,7 +219,7 @@ def publish_connect_reply(client):
             if msg_count >= 5:
                 logging.error("Failed to send connect reply message 5 times! Disconnecting...")
                 stop_event.set()
-        time.sleep(2)  # Refresh rate
+        time.sleep(2)  # Publish data to InfluxDB refresh rate
 
 def publish_command_loop(client):
     global box_list, connected_boxes
@@ -288,13 +301,29 @@ def connect_mqtt():
     client.username_pw_set(USERNAME, PASSWORD)
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect(BROKER, PORT, keepalive=120)
     client.on_disconnect = on_disconnect
+    
+    max_retries = 10
+    retry_delay = 5
+
+    for attempt in range(max_retries):
+        try:
+            client.connect(BROKER, PORT, keepalive=120)
+            logging.info("Connected to MQTT Broker!")
+            return client
+        except ConnectionRefusedError as e:
+            logging.warning(f"Connection attempt {attempt + 1} failed: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(retry_delay)
+            else:
+                logging.error("Max retries reached. Exiting...")
+                raise
+    
     return client
 
 
 def run():
-    time.sleep(5)
+    time.sleep(10) # Wait for emqx to start
     logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
                         level=logging.DEBUG)
     client = connect_mqtt()
