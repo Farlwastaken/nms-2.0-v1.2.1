@@ -10,8 +10,8 @@ from influxdb_client.client.write.point import Point
 lock = threading.Lock() # Mutex
 stop_event = threading.Event()  # Global stop event
 
-box_list = {} # Example key:value pair >> deviceId: [session, time]
-connected_boxes = [] # Connected "deviceId"s
+box_list = {} # Example key:value pair >> {deviceId: [session, time]}
+connected_boxes = [] # Connected devices by deviceId
 
 # connect_mqtt()
 CLIENT_ID = f'python-mqtt-tcp-client'
@@ -114,10 +114,10 @@ def on_message(client, userdata, msg):
         message = json.loads(msg.payload.decode())
         logging.debug(f"Received message: {message}")
         
-        # Print data types of all fields in the received JSON message
-        logging.debug("Data types of fields in the received JSON message:")
-        for key, value in message.items():
-            logging.debug(f"Field: {key}, Type: {type(value).__name__}")
+        # # For debugging: Print data types of all fields in the received JSON message
+        # logging.debug("Data types of fields in the received JSON message:")
+        # for key, value in message.items():
+        #     logging.debug(f"Field: {key}, Type: {type(value).__name__}")
 
         # Update box_list from connection request
         if message.get('type') == "connect":
@@ -130,10 +130,10 @@ def on_message(client, userdata, msg):
             # Flatten the message and track keys from 'response'
             flattened_message, field_keys = flatten_dict(message)
 
-            # Print data types of all fields in the flattened dictionary
-            logging.debug("Data types of fields in the flattened dictionary:")
-            for key, value in flattened_message.items():
-                logging.debug(f"Field: {key}, Type: {type(value).__name__}")
+            # # For debugging: Print data types of all fields in the flattened dictionary
+            # logging.debug("Data types of fields in the flattened dictionary:")
+            # for key, value in flattened_message.items():
+            #     logging.debug(f"Field: {key}, Type: {type(value).__name__}")
 
             # If GPS message, send to device_locations measurement
             if 'latitude' in flattened_message:
@@ -219,7 +219,7 @@ def publish_connect_reply(client):
             if msg_count >= 5:
                 logging.error("Failed to send connect reply message 5 times! Disconnecting...")
                 stop_event.set()
-        time.sleep(2)  # Publish data to InfluxDB refresh rate
+        time.sleep(2)  # Refresh rate to write data to InfluxDB
 
 def publish_command_loop(client):
     global box_list, connected_boxes
