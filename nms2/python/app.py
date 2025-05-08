@@ -104,7 +104,7 @@ def on_disconnect(client, userdata, rc, disconnect_flags, reason, properties=Non
         reconnect_delay = min(reconnect_delay, max_reconnect_delay)
         reconnect_count += 1
 
-    logging.info("Reconnect failed after %s attempts. Exiting...", reconnect_count)
+    logging.error("Reconnect failed after %s attempts. Exiting...", reconnect_count)
     stop_event.set()
 
 
@@ -112,7 +112,7 @@ def on_message(client, userdata, msg):
     global box_list
     try:
         message = json.loads(msg.payload.decode())
-        logging.debug(f"Received message: {message}")
+        logging.info(f"Received message: {message}\n")
         
         # # For debugging: Print data types of all fields in the received JSON message
         # logging.debug("Data types of fields in the received JSON message:")
@@ -123,7 +123,7 @@ def on_message(client, userdata, msg):
         if message.get('type') == "connect":
             with lock:
                 box_list.update({message.get('deviceId'): [message.get('session'), message.get('time')]})
-            logging.info(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}")
+            logging.info(f"New connection request from deviceId: {message.get('deviceId')}, session: {message.get('session')}, time: {message.get('time')}\n")
         
         # Write all command_reply messages to InfluxDB
         if message.get('type') == "command_reply":
@@ -166,7 +166,7 @@ def on_message(client, userdata, msg):
                                         record_field_keys=list(field_keys))
 
             write_api.write(bucket=bucket, org=org, record=point)
-            logging.info(f"\nWriting to InfluxDB: {point.to_line_protocol()}\n")
+            logging.info(f"Writing to InfluxDB: {point.to_line_protocol()}\n")
 
     except json.JSONDecodeError as e:
         logging.error(f"Failed to decode JSON payload: {e}")
@@ -186,7 +186,7 @@ def publish_connect_reply(client):
 
         for box in boxes_to_process:
             if not client.is_connected():
-                logging.error("publish_connect_reply: MQTT client is not connected!")
+                logging.error("publish_connect_reply: MQTT client is not connected to EMQX broker!")
                 time.sleep(1)
                 continue  
 
@@ -214,7 +214,7 @@ def publish_connect_reply(client):
                     connected_boxes.append(box)
                 time.sleep(2)
             else:
-                logging.error(f"Failed to send connection reply to {box}. Retrying...")
+                logging.info(f"Failed to send connection reply to {box}. Retrying...")
             msg_count += 1
             if msg_count >= 5:
                 logging.error("Failed to send connect reply message 5 times! Disconnecting...")
@@ -242,7 +242,7 @@ def publish_command_loop(client):
                 message = json.dumps(command)
 
                 if not client.is_connected():
-                    logging.error("publish_command_loop: MQTT client is not connected! Skipping this command loop.")
+                    logging.error("publish_command_loop: MQTT client is not connected to EMQX broker! Skipping this command loop.")
                     time.sleep(2)
                     continue
 
