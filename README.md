@@ -33,7 +33,7 @@ The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo 
 If you are from OST continuing this project, I'd encourage you to fork this project, clone it to your computer, develop new features or changes to the project, then commit your changes to a new branch in your fork. 
 Branch off from the latest version branch (not the main branch) and rename your new branch as the newest version to continue the chain of branches. 
 * e.g. `main` -> `v1` -> `v2` -> `v3` -> ...
-* For a step-by-step GitHub user guide to continue this project as an OST Collaborator, see CHAIN_GUIDE.md
+* For a step-by-step GitHub user guide to continue this project as an OST Collaborator, see `CHAIN_GUIDE.md`
 
 When you have added the new branch to your fork, submit a pull request to this base repository. This way, we may compile all versions from different collaborators in OST under a single GitHub repository.
 
