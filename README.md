@@ -31,7 +31,8 @@ The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo 
 ## How to tweak this project for your own use
 
 If you are from OST continuing this project, I'd encourage you to fork this project, clone it to your computer, develop new features or changes to the project, then commit your changes to a new branch in your fork. 
-Build off the latest branch's version and rename your new branch as the new version to continue the chain of branches. (e.g. main -> v1 -> v2 -> v-> -> ...)
+Build off the latest branch's version and rename your new branch as the new version to continue the chain of branches. 
+* e.g. main -> v1 -> v2 -> v3 -> ...
 When you have added the new branch to your fork, submit a pull request to this base repository. This way, we may compile all versions from different collaborators in OST under a single GitHub repository.
 
 Otherwise, if you are a regular user, I'd encourage you to clone and rename this project to suit your own purposes. This NMS is built for monitoring IoT Powerlink Smart Boxes and not other IoT devices, but it may serve as a good starter boilerplate for a software that monitors a different set of devices that use MQTT Protocol.
