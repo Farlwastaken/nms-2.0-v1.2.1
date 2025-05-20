@@ -2,7 +2,7 @@
 
 ## A fully functional project using a script written in Python that collects data from multiple Smart Boxes, pipelines it to InfluxDB, and displays it on a Grafana dashboard.
 
-This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and gps data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The application containerized and can be run using a Docker hub. The application performs the following:
+This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and gps data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management Software (NMS) is containerized and can be run using a Docker hub. The NMS performs the following:
 
 * Create two custom dashboards using Grafana displaying 1. sensor data and 2. map view of boxes' GPS coordinates
 * Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the Smart Box and the Python script
@@ -10,11 +10,14 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 * Automatically establish connection handshake with Smart Box using a Python script
 * Automatically send custom commands to every connected Smart Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python Script
 
-## Entity Relationship Diagram of 
-
+## Basic System Architecture of NMS
+![System_Architecture](nms2/documentation/extras/System_Architecture.png)
+## Entity Relationship Diagram of NMS
+![ERD](nms2/documentation/extras/ERD.png)
 ## Class Diagram of MQTT Messages and InfluxDB Measurements
-
+![Class_Diagram](nms2/documentation/extras/Class_Diagram.png)
 ## Flowchart of app-to-smart-box Connection Handshake
+![Flowchart](nms2/documentation/extras/Flowchart.png)
 
 ## How to install and run this Network Management Software (NMS) using Docker Hub
 
