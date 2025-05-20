@@ -16,7 +16,7 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 
 ## Flowchart of app-to-smart-box Connection Handshake
 
-## How to install and run this Network Management SOftware (NMS) using Docker Hub
+## How to install and run this Network Management Software (NMS) using Docker Hub
 
 The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo Videos found in the "documentation" folder, but in short:
 
