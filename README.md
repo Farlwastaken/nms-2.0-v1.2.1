@@ -25,14 +25,15 @@ The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo 
 
 1. Clone this project
 2. Install Docker Desktop - https://www.docker.com/products/docker-desktop/
-3. cd to the nms2 folder and run 'docker compose up -d --build' on a terminal (Windows)
+3. cd to the nms2 folder and run `docker compose up -d --build` on a terminal (Windows)
 4. Open Docker Desktop and navigate to the container titled 'python_app' to view logs
 
 ## How to tweak this project for your own use
 
 If you are from OST continuing this project, I'd encourage you to fork this project, clone it to your computer, develop new features or changes to the project, then commit your changes to a new branch in your fork. 
 Branch off from the latest version branch (not the main branch) and rename your new branch as the newest version to continue the chain of branches. 
-* e.g. main -> v1 -> v2 -> v3 -> ...
+* e.g. `main` -> `v1` -> `v2` -> `v3` -> ...
+* For a step-by-step GitHub user guide to continue this project as an OST Collaborator, see CHAIN_GUIDE.md
 
 When you have added the new branch to your fork, submit a pull request to this base repository. This way, we may compile all versions from different collaborators in OST under a single GitHub repository.
 
