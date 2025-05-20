@@ -2,7 +2,7 @@
 
 ## A fully functional project using a script written in Python that collects data from multiple Smart Boxes, pipelines it to InfluxDB, and displays it on a Grafana dashboard.
 
-This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and gps data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management Software (NMS) is containerized and can be run using a Docker hub. The NMS performs the following:
+This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and GPS data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management Software (NMS) is containerized and can be run using a Docker hub. The NMS performs the following:
 
 * Create two custom dashboards using Grafana displaying 1. sensor data and 2. map view of boxes' GPS coordinates
 * Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the Smart Box and the Python script
