@@ -4,7 +4,7 @@
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
-        <mxCell id="hVDajvhqYUPW52PMyLvV-29" value="" style="group;labelBackgroundColor=none;fontColor=#1D3557;rounded=1;perimeterSpacing=0;strokeColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1" connectable="0">
+        <mxCell id="hVDajvhqYUPW52PMyLvV-29" value="" style="group;labelBackgroundColor=none;fontColor=#1D3557;rounded=1;perimeterSpacing=0;strokeColor=none;glass=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1" connectable="0">
           <mxGeometry x="75" y="369" width="676.83" height="550" as="geometry" />
         </mxCell>
         <mxCell id="hVDajvhqYUPW52PMyLvV-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#457B9D;fontColor=default;labelBackgroundColor=none;" parent="hVDajvhqYUPW52PMyLvV-29" source="hVDajvhqYUPW52PMyLvV-22" target="hVDajvhqYUPW52PMyLvV-18" edge="1">
@@ -38,7 +38,7 @@
             <mxPoint x="151.75844092752106" y="-17.192141506886305" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="NMS 2.0 Startup Complete" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;labelBackgroundColor=none;fillColor=#A8DADC;strokeColor=#457B9D;fontColor=#1D3557;container=0;" parent="hVDajvhqYUPW52PMyLvV-29" vertex="1">
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="NMS 2.0 Startup Complete" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;labelBackgroundColor=none;fillColor=#A8DADC;strokeColor=#457B9D;fontColor=#1D3557;container=0;dashed=1;dashPattern=8 8;" parent="hVDajvhqYUPW52PMyLvV-29" vertex="1">
           <mxGeometry width="303.51688185504213" height="48.27167161760735" as="geometry" />
         </mxCell>
         <mxCell id="hVDajvhqYUPW52PMyLvV-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#457B9D;fontColor=default;labelBackgroundColor=none;" parent="hVDajvhqYUPW52PMyLvV-29" source="WIyWlLk6GJQsqaUBKTNV-11" target="hVDajvhqYUPW52PMyLvV-7" edge="1">
@@ -58,7 +58,7 @@
         <mxCell id="hVDajvhqYUPW52PMyLvV-7" value="Box sends connection request to EMQX with unique session ID" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;labelBackgroundColor=none;fillColor=#A8DADC;strokeColor=#457B9D;fontColor=#1D3557;container=0;" parent="hVDajvhqYUPW52PMyLvV-29" vertex="1">
           <mxGeometry y="250.56710775047267" width="303.51688185504213" height="48.27167161760735" as="geometry" />
         </mxCell>
-        <mxCell id="hVDajvhqYUPW52PMyLvV-18" value="Connection handshake complete. Python script app.py begins sending commands." style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;labelBackgroundColor=none;fillColor=#A8DADC;strokeColor=#457B9D;fontColor=#1D3557;container=0;" parent="hVDajvhqYUPW52PMyLvV-29" vertex="1">
+        <mxCell id="hVDajvhqYUPW52PMyLvV-18" value="Connection handshake complete. Python script app.py begins sending commands." style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;labelBackgroundColor=none;fillColor=#A8DADC;strokeColor=#457B9D;fontColor=#1D3557;container=0;dashed=1;dashPattern=8 8;" parent="hVDajvhqYUPW52PMyLvV-29" vertex="1">
           <mxGeometry y="501.72832838239265" width="303.51688185504213" height="48.27167161760735" as="geometry" />
         </mxCell>
       </root>
