@@ -1,4 +1,4 @@
-# Network Management System for O2Network's IoT Powerlink Smart Box With Docker
+# Containerized Network Management System for O2Network's IoT Powerlink Smart Box
 
 ## A fully functional project using a script written in Python that collects data from multiple Smart Boxes, pipelines it to InfluxDB, and displays it on a Grafana dashboard.
 
