@@ -2,13 +2,13 @@
 
 ## A fully functional project built on Docker using a Python script to continuously collect data from multiple IoT Boxes, pipeline it to InfluxDB, and display live metrics on a Grafana dashboard.
 
-This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and GPS data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee or intern of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management System (NMS) is containerized application and can be run using a Docker hub. The NMS performs the following:
+This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and GPS data from multiple IoT Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee or intern of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the IoT Box (reboot, set fan speed, change IP address, among others). The Network Management System (NMS) is containerized application and can be run using a Docker hub. The NMS performs the following:
 
 * Create two custom dashboards using Grafana displaying 1. sensor data and 2. map view of boxes' GPS coordinates
-* Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the Smart Box and the Python script
+* Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the IoT Box and the Python script
 * Create an InfluxDB database that creates one measurement for GPS coordinates and one measurement for every connected IoT Box
 * Automatically establish connection handshake with IoT Box using a Python script
-* Automatically send custom commands to every connected Smart Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python script
+* Automatically send custom commands to every connected IoT Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python script
 
 ## Basic System Architecture of the NMS
 ![System_Architecture](nms2/documentation/extras/System_Architecture.png)
@@ -16,7 +16,7 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 ![ERD](nms2/documentation/extras/ERD.png)
 ## Class Diagram of MQTT Messages and InfluxDB Measurements
 ![Class_Diagram](nms2/documentation/extras/Class_Diagram.png)
-## Flowchart of app-to-smart-box Connection Handshake
+## Flowchart of app-to-iot-box Connection Handshake
 ![Flowchart](nms2/documentation/extras/Flowchart.png)
 
 ## How to install and run the NMS using Docker Hub
