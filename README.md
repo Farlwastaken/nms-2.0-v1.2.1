@@ -1,16 +1,16 @@
-# Containerized Network Management System for O2Network's IoT Powerlink Smart Box
+# Containerized Network Management System for O2Network IoT Box
 
-## A fully functional project built on Docker using a Python script to continuously collect data from multiple Smart Boxes, pipeline it to InfluxDB, and display live metrics on a Grafana dashboard.
+## A fully functional project built on Docker using a Python script to continuously collect data from multiple IoT Boxes, pipeline it to InfluxDB, and display live metrics on a Grafana dashboard.
 
-This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and GPS data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management Software (NMS) is containerized and can be run using a Docker hub. The NMS performs the following:
+This project was built from the ground up by an OneSystems Technologies (OST) intern to create a software that collects and displays live sensor and GPS data from multiple Smart Boxes simultaneously on a web-based dashboard. Future direction of this project will be continued by another employee or intern of OST to develop features such as a user permissions system, a login page, and an interactible web interface to send specific commands to the Smart Box (reboot, set fan speed, change IP address, among others). The Network Management System (NMS) is containerized application and can be run using a Docker hub. The NMS performs the following:
 
 * Create two custom dashboards using Grafana displaying 1. sensor data and 2. map view of boxes' GPS coordinates
 * Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the Smart Box and the Python script
-* Create an InfluxDB database that creates one measurement for GPS coordinates and one measurement for every connected Smart Box
-* Automatically establish connection handshake with Smart Box using a Python script
-* Automatically send custom commands to every connected Smart Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python Script
+* Create an InfluxDB database that creates one measurement for GPS coordinates and one measurement for every connected IoT Box
+* Automatically establish connection handshake with IoT Box using a Python script
+* Automatically send custom commands to every connected Smart Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python script
 
-## Basic System Architecture of NMS
+## Basic System Architecture of the NMS
 ![System_Architecture](nms2/documentation/extras/System_Architecture.png)
 ## Entity Relationship Diagram of NMS
 ![ERD](nms2/documentation/extras/ERD.png)
@@ -19,7 +19,7 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 ## Flowchart of app-to-smart-box Connection Handshake
 ![Flowchart](nms2/documentation/extras/Flowchart.png)
 
-## How to install and run this Network Management Software (NMS) using Docker Hub
+## How to install and run the NMS using Docker Hub
 
 The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo Videos found in the "documentation" folder, but in short:
 
@@ -37,8 +37,8 @@ Branch off from the latest version branch (not the main branch) and rename your 
 
 When you have added the new branch to your fork, submit a pull request to this base repository. This way, we may compile all versions from different collaborators in OST under a single GitHub repository.
 
-Otherwise, if you are a regular user, I'd encourage you to clone and rename this project to suit your own purposes. This NMS is built for monitoring IoT Powerlink Smart Boxes and not other IoT devices, but it may serve as a good starter boilerplate for a software that monitors a different set of devices that use MQTT Protocol.
+Otherwise, if you are a regular user, I'd encourage you to clone and rename this project to suit your own purposes. This NMS is built to exclusively monitor O2Network IoT Boxes, but it may serve as a good starter boilerplate for a software that monitors different IoT devices that can communicate using MQTT Protocol.
 
 ## Find a bug?
 
-For OST collaborators, since this project won't be actively maintained by this author besides accepting pull requests, feel free to make your changes or fixes to the new branch in your fork before submitting the pull request.
+For OST collaborators, since this project won't be actively maintained by this author aside from accepting pull requests, feel free to make your changes or fixes to the new branch in your fork before submitting the pull request.
