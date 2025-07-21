@@ -16,7 +16,7 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 ![ERD](nms2/documentation/extras/ERD.png)
 ## Class Diagram of MQTT Messages and InfluxDB Measurements
 ![Class_Diagram](nms2/documentation/extras/Class_Diagram.png)
-## Flowchart of app-to-iot-box Connection Handshake
+## Flowchart of app-to-IoT-Box Connection Handshake
 ![Flowchart](nms2/documentation/extras/Flowchart.png)
 
 ## How to install and run the NMS using Docker Hub
