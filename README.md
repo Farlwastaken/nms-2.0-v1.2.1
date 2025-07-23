@@ -7,8 +7,10 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 * Create two custom dashboards using Grafana displaying 1. sensor data and 2. map view of boxes' GPS coordinates
 * Create an EMQX MQTT Broker that handles incoming and outgoing MQTT messages from the IoT Box and the Python script
 * Create an InfluxDB database that creates one measurement for GPS coordinates and one measurement for every connected IoT Box
-* Automatically establish connection handshake with IoT Box using a Python script
-* Automatically send custom commands to every connected IoT Box to receive specififc data and publish all data to the corresponding InfluxDB measurement on a custom refresh interval of 2 seconds using a Python script
+* Interact with the Iot Box's custom API to automatically establish connection handshake with IoT Box using a Python script
+* Send custom commands to every connected IoT Box to receive specififc monitoring data on a custom interval using a Python script
+* Publish all data to the corresponding InfluxDB measurement on a custom interval using a Python script
+* Pull latest data from from InfluxDB measurements to all Grafana dashboards on a fixed refresh interval
 
 ## Basic System Architecture of the NMS
 ![System_Architecture](nms2/documentation/extras/System_Architecture.png)
