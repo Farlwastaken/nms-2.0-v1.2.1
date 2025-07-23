@@ -21,6 +21,8 @@ This project was built from the ground up by an OneSystems Technologies (OST) in
 ## Flowchart of app-to-IoT-Box Connection Handshake
 ![Flowchart](nms2/documentation/extras/Flowchart.png)
 
+### Note: you can find demo videos about how to use the application inside this repository at nms2/documentation/Demo Videos 
+
 ## How to install and run the NMS using Docker Hub
 
 The easiest way is to read the NMS 2.0 Documentation slides and follow the Demo Videos found in the "documentation" folder, but in short:
